@@ -1,0 +1,38 @@
+module tb_SimpleProcessor();
+    reg clk;
+    reg reset;
+    reg [15:0] instruction;
+    wire [15:0] result;
+
+    SimpleProcessor uut (
+        .clk(clk),
+        .reset(reset),
+        .instruction(instruction),
+        .result(result)
+    );
+
+    initial begin
+        // Gera o clock
+        clk = 0;
+        forever #5 clk = ~clk;
+    end
+
+    initial begin
+        // Inicializa
+        reset = 1;
+        instruction = 16'b0;
+        #10 reset = 0;
+
+        // Testa uma instrução do tipo R (ADD)
+        instruction = 16'b0000000000100011; // ADD, rs=0, rt=1, rd=3, funct=0000
+        #10;
+
+        // Testa uma instrução do tipo I (LW)
+        instruction = 16'b0010000100100001; // LW, rs=1, rt=2, imm=0010001
+        #10;
+
+        // Testa uma instrução do tipo J (JUMP)
+        instruction = 16'b0100000001111111; // JUMP, target address=00001111111
+        #10;
+    end
+endmodule
